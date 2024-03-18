@@ -1,6 +1,8 @@
 package main
 
 import (
+	"embed"
+	"io/fs"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,8 +15,8 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-// //go:embed web/dist
-// var frontend embed.FS
+//go:embed web/dist/*
+var frontend embed.FS
 
 func loadOpt(opt interface{}) error {
 	loader := configor.New(&configor.Config{
@@ -30,9 +32,6 @@ func loadOpt(opt interface{}) error {
 }
 
 func main() {
-	sigchan := make(chan os.Signal, 1)
-	signal.Notify(sigchan, syscall.SIGINT)
-
 	opt := &option.Option{}
 	if err := loadOpt(opt); err != nil {
 		panic(err)
@@ -40,8 +39,8 @@ func main() {
 
 	app := backend.NewServer(opt)
 
-	// fe, _ := fs.Sub(frontend, "web/dist")
-	// app.Frontend(fe)
+	fe, _ := fs.Sub(frontend, "web/dist")
+	app.Frontend(fe)
 
 	plugin.Setup(app)
 	router.Setup(app)
@@ -50,9 +49,9 @@ func main() {
 		panic(err)
 	}
 
-	s := <-sigchan
-
-	if err := app.Stop(s != syscall.SIGQUIT); err != nil {
+	sigchan := make(chan os.Signal, 1)
+	signal.Notify(sigchan, syscall.SIGINT)
+	if err := app.Stop(syscall.SIGQUIT != <-sigchan); err != nil {
 		panic(err)
 	}
 }
