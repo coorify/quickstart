@@ -40,9 +40,6 @@ func main() {
 	fe, _ := fs.Sub(frontend, "web/dist")
 	app.Frontend(fe)
 
-	// plugin.Setup(app)
-	// router.Setup(app)
-
 	// as desktop
 	// if err := desktop.Run(app); err != nil {
 	// 	panic(err)
