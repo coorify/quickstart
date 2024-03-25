@@ -9,8 +9,6 @@ import (
 
 	"github.com/coorify/backend"
 	"github.com/coorify/quickstart/option"
-	"github.com/coorify/quickstart/plugin"
-	"github.com/coorify/quickstart/router"
 	"github.com/jinzhu/configor"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -42,8 +40,8 @@ func main() {
 	fe, _ := fs.Sub(frontend, "web/dist")
 	app.Frontend(fe)
 
-	plugin.Setup(app)
-	router.Setup(app)
+	// plugin.Setup(app)
+	// router.Setup(app)
 
 	// as desktop
 	// if err := desktop.Run(app); err != nil {
