@@ -45,6 +45,11 @@ func main() {
 	plugin.Setup(app)
 	router.Setup(app)
 
+	// as desktop
+	// if err := desktop.Run(app); err != nil {
+	// 	panic(err)
+	// }
+
 	if err := app.Start(); err != nil {
 		panic(err)
 	}
